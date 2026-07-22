@@ -1,0 +1,56 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+}
+
+.title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.subtitle {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin: 2px 0 0;
+}
+
+.errorCard {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-5) var(--space-6);
+    background-color: var(--color-danger-bg);
+    color: var(--color-danger-fg-strong);
+    border: var(--border-width) var(--border-style) var(--color-danger-fg);
+    border-radius: var(--radius-lg);
+}
+
+.errorIcon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--color-danger-fg);
+    flex-shrink: 0;
+}
+
+.errorTitle {
+    margin: 0 0 var(--space-1);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+}
+
+.errorText {
+    margin: 0;
+    font-size: var(--font-size-sm);
+    color: var(--color-danger-fg-strong);
+}

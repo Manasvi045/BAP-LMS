@@ -1,0 +1,40 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Project_BAP_Flutter2 — root .gitignore
+#
+# Each subproject carries its OWN .gitignore that handles its build/install
+# artifacts (node_modules/, build/, dist/, .dart_tool/, /android/app/*,
+# Pods/, .pub-cache/, etc.). This root file only catches workspace-level
+# patterns that exist OUTSIDE any single subproject — so we deliberately
+# do NOT repeat the build/install rules here.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# IDE — top-level launchers / shared settings outside any subproject
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs (root-level; subprojects have their own *.log rules)
+*.log
+
+# Temporary / scratch
+*.tmp
+*.bak
+*~
+
+# Environment — keep committed .env.example, ignore everything else
+.env
+.env.*
+!.env.example
+
+# Git — merge conflict markers and rebase leftovers
+*.orig
+*.rej
+
+# Node debug logs (in case Node tooling is run from the repo root)
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*

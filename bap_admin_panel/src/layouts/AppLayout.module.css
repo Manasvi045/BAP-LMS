@@ -1,0 +1,54 @@
+.app {
+    min-height: 100vh;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    display: flex;
+}
+
+.sidebar {
+    display: block;
+    flex-shrink: 0;
+}
+
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.content {
+    flex: 1;
+    padding: var(--content-padding-y) var(--content-padding-x);
+    max-width: var(--content-max-width);
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Backdrop is hidden by default; on small screens we surface it when
+   the sidebar is open. The sidebar slides in over content. */
+.backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: var(--z-index-overlay - 1);
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: var(--z-index-overlay);
+        transform: translateX(-100%);
+        transition: transform var(--transition-base);
+    }
+    .sidebarOpen {
+        transform: translateX(0);
+    }
+    .backdrop {
+        display: block;
+    }
+}

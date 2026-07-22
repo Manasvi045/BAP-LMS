@@ -1,0 +1,66 @@
+.navbar {
+    height: var(--navbar-height);
+    border-bottom: var(--border-width) var(--border-style) var(--color-border);
+    background-color: var(--color-bg-elevated);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-5);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-index-sticky);
+}
+
+.left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.iconButton {
+    width: 2.25rem;
+    height: 2.25rem;
+    border: none;
+    background: transparent;
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+.iconButton:hover {
+    background-color: var(--color-bg-hover);
+    color: var(--color-text);
+}
+
+.icon {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+.user {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.userName {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+}
+
+.userRole {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+}

@@ -1,0 +1,164 @@
+.tableWrap {
+    overflow-x: auto;
+    background-color: var(--color-bg-elevated);
+    border: var(--border-width) var(--border-style) var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.empty {
+    padding: var(--space-12);
+    text-align: center;
+    color: var(--color-text-muted);
+    background-color: var(--color-bg-elevated);
+    border: var(--border-width) var(--border-style) var(--color-border);
+    border-radius: var(--radius-lg);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+}
+
+.table thead th {
+    text-align: left;
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    padding: var(--space-3) var(--space-5);
+    background-color: var(--color-bg-subtle);
+    border-bottom: var(--border-width) var(--border-style) var(--color-border);
+}
+
+.actionsHead {
+    width: 3.5rem;
+}
+
+.table tbody td {
+    padding: var(--space-3) var(--space-5);
+    border-bottom: var(--border-width) var(--border-style) var(--color-border);
+    color: var(--color-text);
+    vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table tbody tr:hover {
+    background-color: var(--color-bg-hover);
+}
+
+.userCell {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-width: 16rem;
+}
+
+.avatar {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-primary-100);
+    color: var(--color-primary-700);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    flex-shrink: 0;
+}
+
+.userText {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+    min-width: 0;
+}
+
+.userName {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 20rem;
+}
+
+.you {
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-subtle);
+    font-size: var(--font-size-xs);
+}
+
+.userEmail {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 20rem;
+}
+
+.muted {
+    color: var(--color-text-muted);
+    white-space: nowrap;
+}
+
+.statusDot {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+}
+
+.dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-text-muted);
+}
+
+.statusActive .dot {
+    background-color: var(--color-success-fg);
+}
+
+.statusActive {
+    color: var(--color-success-fg-strong);
+}
+
+.statusInactive .dot {
+    background-color: var(--color-danger-fg);
+}
+
+.statusInactive {
+    color: var(--color-danger-fg-strong);
+}
+
+.actionsCell {
+    text-align: right;
+    white-space: nowrap;
+    width: 3.5rem;
+}
+
+.skeletonRow td {
+    padding: var(--space-3) var(--space-5);
+}
+
+.skeleton {
+    height: 1.5rem;
+    background-color: var(--color-bg-subtle);
+    border-radius: var(--radius-sm);
+    animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50%      { opacity: 1; }
+}

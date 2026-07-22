@@ -1,0 +1,53 @@
+/* styles/globals.css
+ * Application-wide base styles. Loaded once from main.jsx after reset.css.
+ */
+
+@import "./reset.css";
+@import "./tokens.css";
+
+html {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+}
+
+body {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-normal);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    transition: background-color var(--transition-base),
+        color var(--transition-base);
+}
+
+::selection {
+    background-color: var(--color-primary-200);
+    color: var(--color-primary-900);
+}
+
+:focus-visible {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+/* Scrollbar — subtle, theme-aware */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-strong) transparent;
+}
+
+*::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--color-border-strong);
+    border-radius: var(--radius-pill);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-text-subtle);
+}

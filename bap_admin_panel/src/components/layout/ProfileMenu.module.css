@@ -1,0 +1,90 @@
+.root {
+    position: relative;
+}
+
+.avatar {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-primary-600);
+    color: var(--color-text-inverse);
+    border: none;
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color var(--transition-fast);
+}
+
+.avatar:hover {
+    background-color: var(--color-primary-700);
+}
+
+.menu {
+    position: absolute;
+    top: calc(100% + var(--space-2));
+    right: 0;
+    min-width: 16rem;
+    background-color: var(--color-bg-elevated);
+    border: var(--border-width) var(--border-style) var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-2);
+    z-index: var(--z-index-dropdown);
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-2) var(--space-3);
+    border-bottom: var(--border-width) var(--border-style) var(--color-border);
+    margin-bottom: var(--space-2);
+}
+
+.headerName {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+}
+
+.headerEmail {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+}
+
+.headerRole {
+    margin-top: var(--space-1);
+    font-size: var(--font-size-xs);
+    color: var(--color-primary-600);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.menuItem {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    text-align: left;
+    transition: background-color var(--transition-fast);
+}
+
+.menuItem:hover {
+    background-color: var(--color-bg-hover);
+}
+
+.menuIcon {
+    width: 1rem;
+    height: 1rem;
+    color: var(--color-text-muted);
+}

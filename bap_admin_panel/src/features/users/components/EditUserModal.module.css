@@ -1,0 +1,184 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    width: 100%;
+}
+
+.fieldLabel {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+}
+
+.required {
+    color: var(--color-danger-fg);
+    margin-left: 2px;
+}
+
+.radioGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-top: var(--space-1);
+}
+
+.radio {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background-color: var(--color-bg);
+    border: var(--border-width) var(--border-style) var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    cursor: pointer;
+    text-align: left;
+    transition: border-color var(--transition-fast),
+        background-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+    font: inherit;
+}
+
+.radio:hover {
+    background-color: var(--color-bg-hover);
+}
+
+.radio:focus-visible {
+    outline: none;
+    border-color: var(--color-primary-500);
+    box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
+.radioActive {
+    border-color: var(--color-primary-500);
+    background-color: var(--color-primary-50);
+    box-shadow: inset 0 0 0 1px var(--color-primary-500);
+}
+
+[data-theme="dark"] .radioActive {
+    background-color: rgba(99, 102, 241, 0.12);
+}
+
+.radioIcon {
+    width: 1.1rem;
+    height: 1.1rem;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.radioActive .radioIcon {
+    color: var(--color-primary-500);
+}
+
+.radioText {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.radioTitle {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+}
+
+.radioHint {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    line-height: 1.4;
+}
+
+.hint {
+    margin: var(--space-1) 0 0;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+}
+
+.errorMsg {
+    margin: 2px 0 0;
+    font-size: var(--font-size-xs);
+    color: var(--color-danger-fg);
+}
+
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-8);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+}
+
+.error {
+    margin: 0;
+    padding: var(--space-3);
+    background-color: var(--color-danger-bg);
+    color: var(--color-danger-fg-strong);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+}
+
+.confirmBody {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-4);
+}
+
+.confirmIconWrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    background-color: var(--color-warning-bg, rgba(234, 179, 8, 0.15));
+    color: var(--color-warning-fg, #b45309);
+    margin: 0 auto;
+}
+
+.confirmIcon {
+    width: 1.4rem;
+    height: 1.4rem;
+}
+
+.confirmText {
+    margin: 0;
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+    text-align: center;
+    line-height: 1.5;
+}
+
+.confirmText strong {
+    font-weight: var(--font-weight-semibold);
+}
+
+.confirmDetail {
+    margin: 0;
+    padding: var(--space-3);
+    background-color: var(--color-bg);
+    border: var(--border-width) var(--border-style) var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    text-align: center;
+}
