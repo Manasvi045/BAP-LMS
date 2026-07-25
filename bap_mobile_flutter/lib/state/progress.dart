@@ -92,8 +92,15 @@ class ProgressMap {
       entries.map((k, v) => MapEntry(k, v.toJson()));
 }
 
-const String _storageKey = 'bap.progress.v1';
+/// Legacy unnamespaced key. Kept so that pre-namespacing users don't lose
+/// progress on first launch after the multi-user namespace landed. New
+/// stores always use the namespaced form (`bap.progress.v1.<userId>`).
+const String _legacyStorageKey = 'bap.progress.v1';
 const int defaultStreak = 4;
+
+/// Prefixes every namespaced key. Versioned so future schema changes can
+/// bump without colliding with stale data on the same device.
+const String _namespacedKeyPrefix = 'bap.progress.v1.';
 
 /// Pure-Dart ProgressNotifier — UI-agnostic. The notifier owns the state map
 /// and exposes `recordSection`, `recordExam`, and `get`. Persistence is
@@ -170,10 +177,26 @@ abstract class ProgressStore {
 }
 
 class SharedPrefsProgressStore implements ProgressStore {
+  /// Per-user namespacing. An empty [userId] is the legacy "shared
+  /// key" mode and preserves the old behaviour bit-for-bit (so existing
+  /// callers that haven't been updated still work). A non-empty
+  /// [userId] reads/writes under a namespaced key so the admin's
+  /// preview progress never mixes with a real learner's data on the
+  /// same device.
+  final String userId;
+
+  const SharedPrefsProgressStore({this.userId = ''});
+
+  String _key() =>
+      userId.isEmpty ? _legacyStorageKey : '$_namespacedKeyPrefix$userId';
+
   @override
   Future<ProgressMap?> load() async {
     final prefs = await SharedPreferences.getInstance();
-    final raw = prefs.getString(_storageKey);
+    // Namespaced read first (if userId is set), legacy read second.
+    // Legacy fallback gives one-time in-flight migration for users who
+    // had progress stored under the global key before namespacing.
+    final raw = prefs.getString(_key()) ?? prefs.getString(_legacyStorageKey);
     if (raw == null || raw.isEmpty) return null;
     try {
       final j = jsonDecode(raw) as Map<String, dynamic>;
@@ -186,7 +209,7 @@ class SharedPrefsProgressStore implements ProgressStore {
   @override
   Future<void> save(ProgressMap map) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_storageKey, jsonEncode(map.toJson()));
+    await prefs.setString(_key(), jsonEncode(map.toJson()));
   }
 }
 

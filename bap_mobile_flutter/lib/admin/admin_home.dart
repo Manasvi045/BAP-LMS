@@ -21,6 +21,7 @@
 import 'package:flutter/material.dart';
 
 import '../api/api_client.dart';
+import '../app.dart';
 import '../auth/auth_models.dart';
 import '../auth/auth_service.dart';
 import '../auth/widgets/sign_out_button.dart';
@@ -122,6 +123,27 @@ class _AdminHomeState extends State<AdminHome> {
     );
   }
 
+  /// Pushes the learner shell (BapShell) onto the navigator as a full
+  /// screen route. The shell inherits the host MaterialApp's theme so
+  /// it doesn't visually clash with AdminHome, but it owns its own
+  /// themeName internally — toggling dark mode inside the learner
+  /// preview does NOT change AdminHome's theme. System back returns
+  /// to AdminHome with its tab/scroll state preserved.
+  ///
+  /// The local progress store inside BapShell is namespaced by this
+  /// admin's user id, so the admin's preview progress never mixes
+  /// with a real learner's data on the same device.
+  void _openLearnerShell() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => BapShell(
+          onSignOut: widget.onSignOut,
+          userId: widget.session.user.id.toString(),
+        ),
+      ),
+    );
+  }
+
   // ---------------------------------------------------------------------------
   // AppBar menu (sign out + quick actions)
   // ---------------------------------------------------------------------------
@@ -190,6 +212,7 @@ class _AdminHomeState extends State<AdminHome> {
                 onSelect: _nav.go,
                 authService: widget.authService,
                 onSignOut: widget.onSignOut,
+                onViewAsLearner: _openLearnerShell,
               ),
               appBar: AppBar(
                 backgroundColor: t.surface,

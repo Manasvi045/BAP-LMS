@@ -1,5 +1,31 @@
-// lib/app.dart — app shell: phone-frame, header, body, bottom nav, back toast.
-// 1:1 port of src/App.tsx (state router + back handler + first-launch key setup).
+// lib/app.dart
+// ============================================================================
+// App shell — Phase 1 refactor.
+//
+// Two widgets now:
+//
+//   BapApp   — thin top-level wrapper. Owns the MaterialApp only.
+//              Used by AuthGate for a learner session.
+//
+//   BapShell — the actual phone-frame shell. Owns all the runtime state
+//              (theme, NavController, ProgressNotifier, ChatNotifier,
+//              key-setup, back-toast). Embeddable inside ANY MaterialApp
+//              ancestor so it can be pushed as a route from AdminHome in
+//              Phase 2 (admin "View as learner"). For the learner flow
+//              today, BapShell is hosted by BapApp's MaterialApp.
+//
+// Theme plumbing:
+//   BapShell owns _themeName. Its build wraps the content in a Theme
+//   widget using the same themeData it used to feed into MaterialApp.
+//   Every `ctx.t` lookup inside the shell still resolves to BapShell's
+//   theme, so toggling dark mode inside the shell looks identical to
+//   before. The host MaterialApp.theme is set to a static light theme —
+//   it is only seen by Material widgets OUTSIDE BapShell (none in the
+//   learner flow today).
+//
+// Behavior is intentionally identical for learners; the structure now
+// supports hosting the shell from any MaterialApp ancestor.
+// ============================================================================
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,26 +46,81 @@ import 'widgets/layout/back_toast.dart';
 import 'widgets/layout/bottom_nav.dart';
 import 'widgets/layout/header.dart';
 
-/// The single source of truth for the active theme name. Lives in a stateful
-/// wrapper widget so `setState` triggers a theme rebuild.
-class BapApp extends StatefulWidget {
+// ===========================================================================
+// BapApp — top-level entry used by AuthGate for learner sessions.
+//
+// Thin wrapper. Provides a MaterialApp so the route can launch on its
+// own (no external MaterialApp required). All real state lives in
+// BapShell.
+// ===========================================================================
+
+class BapApp extends StatelessWidget {
   /// Optional callback wired from AuthGate so the learner can sign out
   /// from the overflow menu in the header. The AuthGate handles the
   /// confirmation dialog + AuthService.logout() + route flip — Header
   /// only knows "user tapped Sign out".
   final Future<void> Function()? onSignOut;
 
-  const BapApp({super.key, this.onSignOut});
+  /// Stable user id used to namespace the local progress store so that
+  /// admins/editors previewing the learner shell don't pollute a real
+  /// learner's SharedPreferences on the same device. Empty falls back
+  /// to the legacy un-namespaced key.
+  final String userId;
+
+  const BapApp({super.key, this.onSignOut, this.userId = ''});
 
   @override
-  State<BapApp> createState() => _BapAppState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'BAP',
+      debugShowCheckedModeBanner: false,
+      // Static fallback theme at the MaterialApp layer. BapShell wraps
+      // its content in a Theme widget using its own internal themeName,
+      // so every `ctx.t` lookup inside the shell resolves to BapShell's
+      // theme (the same as before this refactor).
+      theme: buildThemeData(lightTheme),
+      home: BapShell(onSignOut: onSignOut, userId: userId),
+    );
+  }
 }
 
-class _BapAppState extends State<BapApp> {
+// ===========================================================================
+// BapShell — the actual app shell: phone-frame chrome, header, body,
+// bottom nav, back toast. Owns all runtime state. Embeddable inside any
+// MaterialApp ancestor.
+// ===========================================================================
+
+class BapShell extends StatefulWidget {
+  /// Optional callback wired from AuthGate so the learner can sign out
+  /// from the overflow menu in the header. The AuthGate handles the
+  /// confirmation dialog + AuthService.logout() + route flip — Header
+  /// only knows "user tapped Sign out".
+  final Future<void> Function()? onSignOut;
+
+  /// Stable user id used to namespace the local progress store. See
+  /// [BapApp.userId] — the same value is forwarded here.
+  final String userId;
+
+  const BapShell({super.key, this.onSignOut, this.userId = ''});
+
+  @override
+  State<BapShell> createState() => _BapShellState();
+}
+
+class _BapShellState extends State<BapShell> {
+  /// The single source of truth for the active theme name. Lives here
+  /// so `setState` triggers a theme rebuild for every `ctx.t` inside
+  /// the shell.
   String _themeName = 'light';
+
   final NavController _nav = NavController();
-  final ProgressNotifier _progress =
-      ProgressNotifier(store: SharedPrefsProgressStore());
+
+  /// `late` because [ProgressNotifier] needs `widget.userId`, which is
+  /// only available after the State is mounted. First access happens
+  /// in initState / build, by which time `widget` is wired up.
+  late final ProgressNotifier _progress = ProgressNotifier(
+    store: SharedPrefsProgressStore(userId: widget.userId),
+  );
   final ChatNotifier _chat = ChatNotifier(
     currentScreen: () => const NavVerticalSelect(),
     keyStore: const SharedPrefsKeyStore(),
@@ -111,12 +192,14 @@ class _BapAppState extends State<BapApp> {
     final isAssistant = nav.current.screen == NavScreen.assistant;
     final isProgress = nav.current.screen == NavScreen.progress;
 
-    return MaterialApp(
-      title: 'BAP',
-      debugShowCheckedModeBanner: false,
-      theme: themeData,
-      home: PopScope(
-        canPop: false,
+    return Theme(
+      data: themeData,
+      child: PopScope(
+        // canPop is dynamic: false when BapShell is the root route
+        // (learner flow — back is owned by the in-shell NavController),
+        // true when BapShell has been pushed on top of AdminHome via
+        // "View as learner" — system back then pops to AdminHome.
+        canPop: Navigator.canPop(context),
         onPopInvokedWithResult: (didPop, _) {
           if (didPop) return;
           _performBack();

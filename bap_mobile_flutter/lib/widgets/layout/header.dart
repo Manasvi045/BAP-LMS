@@ -155,7 +155,23 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
+    // When BapShell is hosted by BapApp (root route) canPop is false;
+    // when it's been pushed on top of AdminHome via "View as learner"
+    // canPop is true and we surface an explicit back arrow. This keeps
+    // the header's chrome identical to the original learner experience
+    // when nothing is below, but gives the admin a clear path back.
+    final canPop = Navigator.canPop(context);
     final children = <Widget>[
+      // Back arrow — only shown when this route was pushed on top of
+      // another. Tapping pops the route via Navigator.maybePop so the
+      // underlying route (typically AdminHome) returns intact.
+      if (canPop)
+        IconButton(
+          onPressed: () => Navigator.of(context).maybePop(),
+          icon: Icon(Icons.arrow_back, size: 20, color: t.text),
+          tooltip: 'Back',
+          splashRadius: 20,
+        ),
       // Logo column — wrapped in Flexible so a long subtitle can't push
       // the right-side controls (theme + sign-out) off-screen.
       Flexible(flex: 5, fit: FlexFit.loose, child: _buildLogo(context)),

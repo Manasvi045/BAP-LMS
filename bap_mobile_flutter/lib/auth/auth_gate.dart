@@ -202,7 +202,12 @@ class _AuthGateState extends State<AuthGate> {
         // Hand off to the existing app shell. The onSignOut callback
         // surfaces a Sign Out entry in the learner's header overflow
         // menu — the gate handles confirmation + AuthService.logout().
-        return BapApp(onSignOut: _onSignOut);
+        // userId is forwarded so the local progress store is namespaced
+        // per learner (admin/editor previews use a separate namespace).
+        return BapApp(
+          onSignOut: _onSignOut,
+          userId: _session!.user.id.toString(),
+        );
       case _GateState.admin:
         // Wrap AdminHome in a MaterialApp so the AppThemeExt extension
         // is registered with the active ThemeData — without this, every

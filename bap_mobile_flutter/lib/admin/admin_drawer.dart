@@ -18,6 +18,11 @@ class AdminDrawer extends StatelessWidget {
   final AuthService authService;
   final Future<void> Function() onSignOut;
 
+  /// Optional callback wired by AdminHome to push the learner shell
+  /// (BapShell) onto the navigator. Only rendered for users whose
+  /// role is admin or editor — see [_showViewAsLearner].
+  final VoidCallback? onViewAsLearner;
+
   const AdminDrawer({
     super.key,
     required this.user,
@@ -25,7 +30,11 @@ class AdminDrawer extends StatelessWidget {
     required this.onSelect,
     required this.authService,
     required this.onSignOut,
+    this.onViewAsLearner,
   });
+
+  bool get _showViewAsLearner =>
+      onViewAsLearner != null && user.isAdminOrEditor;
 
   Future<void> _handleSignOut(BuildContext context) async {
     // Close the drawer first so the confirmation dialog lands cleanly.
@@ -126,6 +135,35 @@ class AdminDrawer extends StatelessWidget {
                         onSelect(tab);
                       },
                     ),
+                  // ----- Cross-surface: view as learner -----
+                  // Only rendered for admin/editor users when the
+                  // caller wired up [onViewAsLearner]. Visually
+                  // separated by a divider so it reads as a different
+                  // category of action (not another tab).
+                  if (_showViewAsLearner) ...[
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(20, 12, 20, 4),
+                      child: Divider(height: 1),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 4, 20, 4),
+                      child: Text(
+                        'LEARNER SHELL',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 1.0,
+                          color: t.textDim,
+                        ),
+                      ),
+                    ),
+                    _ViewAsLearnerTile(
+                      onTap: () {
+                        Navigator.of(context).maybePop();
+                        onViewAsLearner!();
+                      },
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -211,6 +249,82 @@ class _DrawerTile extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                   ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Cross-surface tile used inside the admin drawer to push the learner
+/// shell (BapShell). Visually distinct from the tab tiles — uses a
+/// school icon and a "preview" badge to make it clear this is a
+/// navigation to a different surface, not another tab in the admin
+/// shell.
+class _ViewAsLearnerTile extends StatelessWidget {
+  final VoidCallback onTap;
+  const _ViewAsLearnerTile({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.t;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      child: Material(
+        color: t.surfaceAlt,
+        borderRadius: BorderRadius.circular(10),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(10),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            child: Row(
+              children: [
+                Icon(Icons.school_outlined, size: 20, color: t.text),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'View as learner',
+                        style: TextStyle(
+                          color: t.text,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'Preview the learner experience',
+                        style: TextStyle(
+                          color: t.textDim,
+                          fontSize: 11.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: t.surface,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: t.border),
+                  ),
+                  child: Text(
+                    'PREVIEW',
+                    style: TextStyle(
+                      fontSize: 9,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.8,
+                      color: t.textMid,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
